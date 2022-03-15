@@ -10,7 +10,6 @@ from rich import print
 from time import sleep
 from sys import exit
 
-# from .config import load_and_validate, setup_config
 from .config import load_and_validate, setup_config
 from .version import __version__
 

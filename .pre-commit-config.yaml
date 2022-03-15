@@ -17,6 +17,7 @@ repos:
     name: pytest-check
     stages: [commit]
     types: [python]
+    files: ^jcli/
     entry: pytest -v -s .
     language: system
     pass_filenames: false
