@@ -1,11 +1,14 @@
 [tool.poetry]
-name = "jcli"
+name = "jenkins-job-cli"
 version = "0.0.2"
 description = "Jcli: list, run, and check jenkins jobs"
 authors = ["Brokenpip3 <brokenpip3@gmail.com>"]
 license = "MIT"
 repository = "https://github.com/brokenpip3/jcli"
 readme = "README.md"
+packages = [
+    {include = "jcli"}
+]
 
 [tool.poetry.scripts]
 jcli = "jcli.cli:main"
