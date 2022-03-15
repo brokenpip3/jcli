@@ -9,3 +9,15 @@ repos:
   - id: check-yaml
     args:
      - --unsafe
+
+# https://stackoverflow.com/a/69979812
+- repo: local
+  hooks:
+  - id: pytest-check
+    name: pytest-check
+    stages: [commit]
+    types: [python]
+    entry: pytest -v -s .
+    language: system
+    pass_filenames: false
+    always_run: true

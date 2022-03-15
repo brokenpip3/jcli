@@ -1,6 +1,6 @@
 from click.testing import CliRunner
 import mock
-from jcli.cli import jobs, run, config, version, job_exist
+from jcli.cli import jobs, run, config, version, job_exist, main
 from jcli.version import __version__
 
 runner = CliRunner()
@@ -15,9 +15,9 @@ def test_run_wrong_name():
     assert result.exception
 
 def test_get_version():
-    result = runner.invoke(version)
+    result = runner.invoke(main, ['--version'])
     assert result.exit_code == 0
-    assert __version__ in result.output
+    assert f'version {__version__}' in result.output
 
 @mock.patch('jcli.config.os.path.exists')
 def test_config(mock_exist):
