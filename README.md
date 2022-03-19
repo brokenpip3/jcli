@@ -6,6 +6,8 @@ Small cli to list, run, and check jenkins jobs
 
 `pip install jenkins-job-cli`
 
+Archlinux users: you can find the pkgbuild [here](https://aur.archlinux.org/packages/jcli)
+
 ## Usage
 
 * `config`: setup the `jcli` configuration
