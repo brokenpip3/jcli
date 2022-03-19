@@ -1,6 +1,10 @@
 # Jcli
 
+
 Small cli to list, run, and check jenkins jobs
+
+https://user-images.githubusercontent.com/40476330/159119721-a55d2f7c-7dff-4fa0-91cd-08f33a78494d.mp4
+
 
 ## Installation
 
