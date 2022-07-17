@@ -10,5 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: actions/setup-python@v3
+    - uses: actions/setup-pytho@v3
+    # https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python#testing-with-pytest-and-pytest-cov
+    - name: Install dependencies and test
+      run: |
+        python -m pip install --upgrade pip
+        pip install poetry
+        poetry install
+        pytest tests.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
     - uses: pre-commit/action@v3.0.0
