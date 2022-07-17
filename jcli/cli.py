@@ -6,9 +6,10 @@ from api4jenkins import Jenkins, exceptions
 from rich.console import Console
 from rich.table import Table
 from rich.prompt import Prompt, Confirm
-from rich import print
+from rich import print as pp
 from time import sleep
 from sys import exit
+import requests as r
 
 from .config import load_and_validate, setup_config
 from .version import __version__
@@ -35,13 +36,68 @@ def get_server_info(a: bool):
     """
     Grab various server info
     """
+    infos = ["nodeDescription", "useCrumbs", "useSecurity"]
     if a:
-        print(f"version: {str(server.version)}")
-        infos = ["nodeDescription", "useCrumbs", "useSecurity"]
+        table = Table(show_header=True, box=None)
+        table.add_column("PARAMETER", no_wrap=True)
+        table.add_column("VALUE")
+        table.add_row("version", server.version)
         for i in infos:
-            print(f"{i}: {server.api_json()[i]}")
+            table.add_row(i, str(server.api_json()[i]))
+        console.print(table)
     else:
-        print(server.version)
+        pp(server.version)
+
+def list_plugins(f: str):
+    """
+    Grab and list all the plugins
+    """
+    if f == "table":
+        table = Table(show_header=True, box=None)
+        table.add_column("NAME")
+        table.add_column("VERSION")
+        table.add_column("ENABLED")
+        for p in server.plugins.api_json(depth=1)['plugins']:
+            if p['enabled']:
+                enabled = ":white_check_mark:"
+            else:
+                enabled = ":x:"
+            table.add_row(p['longName'], p['version'], enabled)
+        console.print(table)
+        return
+    elif f == "yaml":
+        print("---")
+        print("plugins:")
+        for p in server.plugins.api_json(depth=1)['plugins']:
+            if p['enabled']:
+                print(f"- name: {p['shortName']}")
+                print(f"  version: {p['version']}")
+        print("...")
+        return
+
+
+def plugins_to_be_updated():
+    """
+    Grab and list only the plugins that needs to be updated
+    """
+    table = Table(show_header=True, box=None)
+    table.add_column("SHORT NAME", justify="left", no_wrap=True)
+    table.add_column("CURRENT VERSION", style="dim")
+    table.add_column("LATEST", style="green")
+    with console.status("[bold green]Checking last plugins version, please wait...") as status:
+        #status.update(f"[green]Forcing plugins sync with update center, processing..")
+        #server.plugins.check_updates_server()
+        for p in server.plugins.api_json(depth=1)['plugins']:
+            if p['hasUpdate']:
+                status.update(f"[green]Plugins update found: [bold green]{p['longName']}[/bold green], processing..")
+                u = f"https://plugins.jenkins.io/api/plugin/{p['shortName']}"
+                ru = r.get(u)
+                rj = ru.json()
+                if ru.status_code == 200:
+                    outdated = rj["version"]
+                    table.add_row(p['shortName'], p['version'], outdated)
+        status.update("[bold green]Done!")
+        console.print(table)
 
 
 def job_health_check(value: int):
@@ -63,12 +119,12 @@ def job_get_all(deep: int):
     Iterate over folders and print list of jobs
     deep: how deep we need to iterate
     """
-    table = Table(show_header=True, header_style="bold green")
-    table.add_column("Name", style="dim")
-    table.add_column("Description")
-    table.add_column("Folder")
-    table.add_column("Builds")
-    table.add_column("Health")
+    table = Table(show_header=True, box=None)
+    table.add_column("NAME")
+    table.add_column("DESCRIPTION", style="dim")
+    table.add_column("FOLDER")
+    table.add_column("BUILDS")
+    table.add_column("HEALTH")
     with console.status("[bold green]Scraping all jobs, please wait...") as status:
         for job in server.iter_jobs(deep):
             # name = job.__class__.__name__
@@ -185,6 +241,23 @@ def info():
     init_server_connection(cfg["server"], cfg["user"], cfg["password"])
     get_server_info(a=True)
 
+@main.group(help="Plugins management")
+@click.pass_context
+def plugins(ctx):
+    pass
+
+@plugins.command(help="List plugins", name="ls")
+@click.option('--format', "-f", default="table", required=False, help="Output format", type=click.Choice(["table", "yaml"], case_sensitive=False, ))
+def listplugin(format):
+    cfg = load_and_validate()
+    init_server_connection(cfg["server"], cfg["user"], cfg["password"])
+    list_plugins(f=format)
+
+@plugins.command(help="List only outdated plugins and latest version", name="check")
+def listpluginupdate():
+    cfg = load_and_validate()
+    init_server_connection(cfg["server"], cfg["user"], cfg["password"])
+    plugins_to_be_updated()
 
 @main.group(help="List and execute jobs")
 @click.pass_context
