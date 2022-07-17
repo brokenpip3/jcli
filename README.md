@@ -21,3 +21,7 @@ Archlinux users: you can find the pkgbuild [here](https://aur.archlinux.org/pack
   * `run`: run a specific jenkins job
 
 * `jenkins`: show jenkins server info like version (`version`) and security options (`info`)
+
+* `plugins`:
+  * `ls`: List plugins name, status and version
+  * `check`:  List only outdated plugins and latest version
