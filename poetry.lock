@@ -1,6 +1,6 @@
 [[package]]
 name = "api4jenkins"
-version = "1.11"
+version = "1.12"
 description = "Jenkins Python Client"
 category = "main"
 optional = false
@@ -86,7 +86,7 @@ optional = false
 python-versions = "*"
 
 [package.extras]
-test = ["flake8 (==3.7.8)", "hypothesis (==3.55.3)"]
+test = ["hypothesis (==3.55.3)", "flake8 (==3.7.8)"]
 
 [[package]]
 name = "idna"
@@ -137,8 +137,8 @@ optional = false
 python-versions = ">=3.6"
 
 [package.extras]
-dev = ["pre-commit", "tox"]
-testing = ["pytest", "pytest-benchmark"]
+testing = ["pytest-benchmark", "pytest"]
+dev = ["tox", "pre-commit"]
 
 [[package]]
 name = "py"
@@ -266,8 +266,8 @@ content-hash = "5839703891912e594130444952400d36852a7d0849210f67cf6af5a7e6c67882
 
 [metadata.files]
 api4jenkins = [
-    {file = "api4jenkins-1.11-py3-none-any.whl", hash = "sha256:20c11d6a398b2ee448d9d5aeb374009c4d5ba1ad1b94559e2b2f0b2588573360"},
-    {file = "api4jenkins-1.11.tar.gz", hash = "sha256:10c6a8303df981e3d81fbe293c0f08bbda202061bae259bae756e34e73a17e7b"},
+    {file = "api4jenkins-1.12-py3-none-any.whl", hash = "sha256:86a9e5246787ccd3526dbc732aa9ac324d2c419ec350f2a4257ea182033f1108"},
+    {file = "api4jenkins-1.12.tar.gz", hash = "sha256:ed4cff20e0671b37ebb6ea209c17d3bec8a9de0e5b8b732316538c28a40dde78"},
 ]
 appdirs = [
     {file = "appdirs-1.4.4-py2.py3-none-any.whl", hash = "sha256:a841dacd6b99318a741b166adb07e19ee71a274450e68237b4650ca1055ab128"},
