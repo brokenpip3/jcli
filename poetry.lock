@@ -1,10 +1,10 @@
 [[package]]
 name = "api4jenkins"
-version = "1.11"
+version = "1.14"
 description = "Jenkins Python Client"
 category = "main"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.7"
 
 [package.dependencies]
 requests = ">=2.23.0"
@@ -260,8 +260,8 @@ content-hash = "bba3906acf4e677338b9442bd059fe33df3a98ccd93abc28e2d24090460aa102
 
 [metadata.files]
 api4jenkins = [
-    {file = "api4jenkins-1.11-py3-none-any.whl", hash = "sha256:20c11d6a398b2ee448d9d5aeb374009c4d5ba1ad1b94559e2b2f0b2588573360"},
-    {file = "api4jenkins-1.11.tar.gz", hash = "sha256:10c6a8303df981e3d81fbe293c0f08bbda202061bae259bae756e34e73a17e7b"},
+    {file = "api4jenkins-1.14-py3-none-any.whl", hash = "sha256:cbfa0723be49a6aef9953db0651edd3aa9f1ec7fdc305cad9c89ee82b9d53b5f"},
+    {file = "api4jenkins-1.14.tar.gz", hash = "sha256:522e94da90f399d9498cdbe0be75b18c523a95cebb7b821096977c4480dbf0da"},
 ]
 appdirs = [
     {file = "appdirs-1.4.4-py2.py3-none-any.whl", hash = "sha256:a841dacd6b99318a741b166adb07e19ee71a274450e68237b4650ca1055ab128"},
