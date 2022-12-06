@@ -135,9 +135,13 @@ def job_get_all(deep: int):
                 _jfulln = str(job.api_json()["fullName"])
                 _jdir = _jfulln.split("/")[0] if "/" in _jfulln else ""
                 _jdesc = job.description
-                _jlastb = str(job.api_json()["lastBuild"]["number"])
-                _jhealth = job.api_json()["healthReport"][0]["score"]
-                table.add_row(_jname, _jdesc, _jdir, _jlastb, job_health_check(_jhealth))
+                if job.api_json()["lastBuild"]:
+                    _jlastb = str(job.api_json()["lastBuild"]["number"])
+                    _jhealth = job_health_check(job.api_json()["healthReport"][0]["score"])
+                else:
+                    _jlastb = "-"
+                    _jhealth = "-"
+                table.add_row(_jname, _jdesc, _jdir, _jlastb, _jhealth)
         status.update("[bold green]Done!")
         console.print(table)
 
@@ -209,6 +213,7 @@ def job_checks(name: str):
             return new_param
         else:
             exit(0)
+
 
 
 @click.group(help="jcli - Jenkins job cli")
