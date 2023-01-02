@@ -109,7 +109,7 @@ python-versions = "*"
 
 [[package]]
 name = "mock"
-version = "4.0.3"
+version = "5.0.0"
 description = "Rolling backport of unittest.mock for all Pythons"
 category = "dev"
 optional = false
@@ -118,7 +118,7 @@ python-versions = ">=3.6"
 [package.extras]
 build = ["blurb", "twine", "wheel"]
 docs = ["sphinx"]
-test = ["pytest (<5.4)", "pytest-cov"]
+test = ["pytest", "pytest-cov"]
 
 [[package]]
 name = "packaging"
@@ -256,7 +256,7 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "bba3906acf4e677338b9442bd059fe33df3a98ccd93abc28e2d24090460aa102"
+content-hash = "282bf8578feb9bcadc30e3c676dadf1ffab2edb8a6fa6f2724935f02cc10a06f"
 
 [metadata.files]
 api4jenkins = [
@@ -304,8 +304,8 @@ iniconfig = [
     {file = "iniconfig-1.1.1.tar.gz", hash = "sha256:bc3af051d7d14b2ee5ef9969666def0cd1a000e121eaea580d4a313df4b37f32"},
 ]
 mock = [
-    {file = "mock-4.0.3-py3-none-any.whl", hash = "sha256:122fcb64ee37cfad5b3f48d7a7d51875d7031aaf3d8be7c42e2bee25044eee62"},
-    {file = "mock-4.0.3.tar.gz", hash = "sha256:7d3fbbde18228f4ff2f1f119a45cdffa458b4c0dee32eb4d2bb2f82554bac7bc"},
+    {file = "mock-5.0.0-py3-none-any.whl", hash = "sha256:335ef0bf9bcd27505c0c1720d4eac2783f18d07d6f45ac49542b57885a1996dd"},
+    {file = "mock-5.0.0.tar.gz", hash = "sha256:fd552787228eb2ab8352f270470fa93c9ad8b9cbc565c5558ee3faed8edb3853"},
 ]
 packaging = [
     {file = "packaging-21.3-py3-none-any.whl", hash = "sha256:ef103e05f519cdc783ae24ea4e2e0f508a9c99b2d4969652eed6a2e1ea5bd522"},
