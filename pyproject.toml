@@ -23,7 +23,7 @@ PyYAML = "^6.0"
 
 [tool.poetry.dev-dependencies]
 mock = "^5.0.1"
-pytest = "^7.2.1"
+pytest = "^7.2.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
