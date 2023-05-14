@@ -14,14 +14,19 @@ Archlinux users: you can find the pkgbuild [here](https://aur.archlinux.org/pack
 
 ## Usage
 
-* `config`: setup the `jcli` configuration
+```
+Usage: jcli [OPTIONS] COMMAND [ARGS]...
 
-* `jobs`:
-  * `list`: list all jenkins jobs (default deep = 1)
-  * `run`: run a specific jenkins job
+  jcli - Jenkins job cli
 
-* `jenkins`: show jenkins server info like version (`version`) and security options (`info`)
+Options:
+  --version  Show the version and exit.
+  --help     Show this message and exit.
 
-* `plugins`:
-  * `ls`: List plugins name, status and version
-  * `check`:  List only outdated plugins and latest version
+Commands:
+  config   Create jcli config
+  jenkins  Get Jenkins server info
+  jobs     List and execute jobs
+  nodes    Nodes management
+  plugins  Plugins management
+```

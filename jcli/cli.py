@@ -1,17 +1,22 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from sys import exit
+from time import sleep
+from typing import Optional
 
 import click
-from api4jenkins import Jenkins, exceptions
-from rich.console import Console
-from rich.table import Table
-from rich.prompt import Prompt, Confirm
-from rich import print as pp
-from time import sleep
-from sys import exit
 import requests as r
+from api4jenkins import exceptions
+from api4jenkins import Jenkins
+from rich import print as pp
+from rich.console import Console
+from rich.markup import escape
+from rich.prompt import Confirm
+from rich.prompt import Prompt
+from rich.table import Table
 
-from .config import load_and_validate, setup_config
+from .config import load_and_validate
+from .config import setup_config
 from .version import __version__
 
 console = Console()
@@ -48,6 +53,7 @@ def get_server_info(a: bool):
     else:
         pp(server.version)
 
+
 def list_plugins(f: str):
     """
     Grab and list all the plugins
@@ -57,19 +63,19 @@ def list_plugins(f: str):
         table.add_column("NAME")
         table.add_column("VERSION")
         table.add_column("ENABLED")
-        for p in server.plugins.api_json(depth=1)['plugins']:
-            if p['enabled']:
+        for p in server.plugins.api_json(depth=1)["plugins"]:
+            if p["enabled"]:
                 enabled = ":white_check_mark:"
             else:
                 enabled = ":x:"
-            table.add_row(p['longName'], p['version'], enabled)
+            table.add_row(p["longName"], p["version"], enabled)
         console.print(table)
         return
     elif f == "yaml":
         print("---")
         print("plugins:")
-        for p in server.plugins.api_json(depth=1)['plugins']:
-            if p['enabled']:
+        for p in server.plugins.api_json(depth=1)["plugins"]:
+            if p["enabled"]:
                 print(f"- name: {p['shortName']}")
                 print(f"  version: {p['version']}")
         print("...")
@@ -85,19 +91,89 @@ def plugins_to_be_updated():
     table.add_column("CURRENT VERSION", style="dim")
     table.add_column("LATEST", style="green")
     with console.status("[bold green]Checking last plugins version, please wait...") as status:
-        #status.update(f"[green]Forcing plugins sync with update center, processing..")
-        #server.plugins.check_updates_server()
-        for p in server.plugins.api_json(depth=1)['plugins']:
-            if p['hasUpdate']:
+        # status.update(f"[green]Forcing plugins sync with update center, processing..")
+        # server.plugins.check_updates_server()
+        for p in server.plugins.api_json(depth=1)["plugins"]:
+            if p["hasUpdate"]:
                 status.update(f"[green]Plugins update found: [bold green]{p['longName']}[/bold green], processing..")
                 u = f"https://plugins.jenkins.io/api/plugin/{p['shortName']}"
                 ru = r.get(u)
                 rj = ru.json()
                 if ru.status_code == 200:
                     outdated = rj["version"]
-                    table.add_row(p['shortName'], p['version'], outdated)
+                    table.add_row(p["shortName"], p["version"], outdated)
         status.update("[bold green]Done!")
         console.print(table)
+
+
+def list_nodes():
+    """
+    Iterate over nodes and print list of nodes with status
+    """
+    table = Table(show_header=True, box=None)
+    table.add_column("NAME")
+    table.add_column("DESCRIPTION", style="dim")
+    table.add_column("STATUS")
+    table.add_column("MEMORY (mb)", style="dim")
+    table.add_column("DISK (gb)", style="dim")
+    table.add_column("ARCH", style="dim")
+    with console.status("[bold green]Scraping all nodes, please wait...") as status:
+        for node in server.nodes:
+            n = node.api_json()
+            status.update(f"[green]Node found: [bold green]{node.name}[/bold green], processing..")
+            _nname = n["displayName"]
+            _ndesc = n["description"]
+            if n["offline"] == True:
+                _nstatus = ":x:"
+            else:
+                _nstatus = ":white_check_mark:"
+                _ntotalmemory = (
+                    int(n["monitorData"]["hudson.node_monitors.SwapSpaceMonitor"]["totalPhysicalMemory"]) / 1024 / 1024
+                )
+                _naivalablememory = (
+                    int(n["monitorData"]["hudson.node_monitors.SwapSpaceMonitor"]["availablePhysicalMemory"])
+                    / 1024
+                    / 1024
+                )
+                _nmemory = f"{int(_ntotalmemory)-int(_naivalablememory)}/{int(_ntotalmemory)}"
+                _ndisk = (
+                    f"{round((n['monitorData']['hudson.node_monitors.DiskSpaceMonitor']['size']/1024/1024/1024), 2)}"
+                )
+                _narch = n["monitorData"]["hudson.node_monitors.ArchitectureMonitor"]
+            table.add_row(_nname, _ndesc, _nstatus, _nmemory, _ndisk, _narch)
+        status.update("[bold green]Done!")
+        console.print(table)
+
+
+def enable_disable_node(node: str, action: str, motivation: Optional[str]):
+    """
+    Enable or disable a node
+    """
+    n = server.nodes.get(node)
+    if n.exists():
+        if action == "enable":
+            n.enable()
+            console.print(f"[bold green]Node {node} enabled!")
+        elif action == "disable":
+            n.disable()
+            console.print(f"[bold green]Node {node} disabled!")
+    else:
+        console.print(f"[bold red]Node {node} not found!")
+        return
+
+
+def node_run_job(node: str):
+    """
+    Ask the command and run a job on a specific node
+    """
+    n = server.nodes.get(node)
+    if n == None:
+        console.print(f"[bold red]Node {node} not found!")
+        return
+    c = Prompt.ask(f"[green] Which command do you want to run?")
+    console.print(f"Running command {c} on node [green]{node}[/green], please wait...")
+    nl = "\n"
+    console.print(f"{nl}{escape(n.run_script(c))}{nl}")
 
 
 def job_health_check(value: int):
@@ -215,7 +291,6 @@ def job_checks(name: str):
             exit(0)
 
 
-
 @click.group(help="jcli - Jenkins job cli")
 @click.version_option(__version__)
 def main():
@@ -246,23 +321,75 @@ def info():
     init_server_connection(cfg["server"], cfg["user"], cfg["password"])
     get_server_info(a=True)
 
+
+@main.group(help="Nodes management")
+@click.pass_context
+def nodes(ctx):
+    pass
+
+
+@nodes.command(help="List nodes", name="ls")
+def listnodes():
+    cfg = load_and_validate()
+    init_server_connection(cfg["server"], cfg["user"], cfg["password"])
+    list_nodes()
+
+
+@nodes.command(help="Enable node", name="enable")
+@click.argument("node")
+def enablenode(node, motivation: Optional[str] = None):
+    cfg = load_and_validate()
+    init_server_connection(cfg["server"], cfg["user"], cfg["password"])
+    enable_disable_node(node, "enable", motivation)
+
+
+@nodes.command(help="Disable node", name="disable")
+@click.argument("node")
+@click.argument("motivation", required=False)
+def disablenode(node, motivation: Optional[str] = None):
+    cfg = load_and_validate()
+    init_server_connection(cfg["server"], cfg["user"], cfg["password"])
+    enable_disable_node(node, "disable", motivation)
+
+
+@nodes.command(help="Run a command", name="run")
+@click.argument("node")
+def runcommand(node):
+    cfg = load_and_validate()
+    init_server_connection(cfg["server"], cfg["user"], cfg["password"])
+    node_run_job(node)
+
+
 @main.group(help="Plugins management")
 @click.pass_context
 def plugins(ctx):
     pass
 
+
 @plugins.command(help="List plugins", name="ls")
-@click.option('--format', "-f", default="table", required=False, help="Output format", type=click.Choice(["table", "yaml"], case_sensitive=False, ))
+@click.option(
+    "--format",
+    "-f",
+    default="table",
+    required=False,
+    help="Output format",
+    type=click.Choice(
+        ["table", "yaml"],
+        case_sensitive=False,
+    ),
+)
 def listplugin(format):
     cfg = load_and_validate()
     init_server_connection(cfg["server"], cfg["user"], cfg["password"])
     list_plugins(f=format)
+
 
 @plugins.command(help="List only outdated plugins and latest version", name="check")
 def listpluginupdate():
     cfg = load_and_validate()
     init_server_connection(cfg["server"], cfg["user"], cfg["password"])
     plugins_to_be_updated()
+
 
 @main.group(help="List and execute jobs")
 @click.pass_context
