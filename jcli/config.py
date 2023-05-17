@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 # adjusted from https://raw.githubusercontent.com/mbovo/pdh/main/src/pdh/config.py
-
-import yaml
 import os
 import sys
 from typing import Any
+
+import yaml
+from appdirs import AppDirs
 from rich import print
 from rich.prompt import Prompt
-from appdirs import AppDirs
 
 _APPNAME = "jcli"
 _AUTHOR = "brokenpip3"
