@@ -20,6 +20,7 @@ jobs:
     permissions:
       id-token: write
     steps:
+    - uses: actions/checkout@v3
     - name: Python
       uses: actions/setup-python@v4
       with:
