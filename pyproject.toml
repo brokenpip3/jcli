@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "jenkins-job-cli"
-version = "0.3.0"
+version = "0.3.4"
 description = "Jcli: Alternative Jenkins CLI written in Python"
 authors = ["Brokenpip3 <brokenpip3@gmail.com>"]
 license = "MIT"
@@ -20,6 +20,7 @@ rich = ">=12,<14"
 click = "^8.0.4"
 appdirs = "^1.4.4"
 PyYAML = "^6.0"
+trogon = "^0.5.0"
 
 [tool.poetry.dev-dependencies]
 mock = "^5.0.2"

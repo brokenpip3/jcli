@@ -14,6 +14,7 @@ from rich.markup import escape
 from rich.prompt import Confirm
 from rich.prompt import Prompt
 from rich.table import Table
+from trogon import tui
 
 from .config import load_and_validate
 from .config import setup_config
@@ -291,6 +292,7 @@ def job_checks(name: str):
             exit(0)
 
 
+@tui()
 @click.group(help="jcli - Jenkins job cli")
 @click.version_option(__version__)
 def main():
