@@ -3,13 +3,8 @@ import mock
 from click.testing import CliRunner
 
 from jcli.cli import config
-from jcli.cli import enable_disable_node
-from jcli.cli import init_server_connection
-from jcli.cli import job_exist
 from jcli.cli import jobs
 from jcli.cli import main
-from jcli.cli import run
-from jcli.cli import version
 from jcli.version import __version__
 
 runner = CliRunner()
