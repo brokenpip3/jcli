@@ -6,6 +6,10 @@ updates:
       interval: "weekly"
     target-branch: main
     assignees: ["brokenpip3"]
+    groups:
+      python:
+        patterns:
+          - "*"
 
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -13,3 +17,7 @@ updates:
       interval: "weekly"
     target-branch: main
     assignees: ["brokenpip3"]
+    groups:
+      actions:
+        patterns:
+          - "*"

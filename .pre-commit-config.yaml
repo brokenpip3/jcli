@@ -33,3 +33,9 @@ repos:
     entry: pytest -v -s .
     language: system
     pass_filenames: false
+
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  # Ruff version.
+  rev: v0.1.0
+  hooks:
+    - id: ruff

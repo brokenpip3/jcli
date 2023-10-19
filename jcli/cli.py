@@ -14,7 +14,6 @@ from rich.markup import escape
 from rich.prompt import Confirm
 from rich.prompt import Prompt
 from rich.table import Table
-from trogon import tui
 
 from .config import load_and_validate
 from .config import setup_config
@@ -124,7 +123,7 @@ def list_nodes():
             status.update(f"[green]Node found: [bold green]{node.name}[/bold green], processing..")
             _nname = n["displayName"]
             _ndesc = n["description"]
-            if n["offline"] == True:
+            if n["offline"] is True:
                 _nstatus = ":x:"
             else:
                 _nstatus = ":white_check_mark:"
@@ -168,10 +167,10 @@ def node_run_job(node: str):
     Ask the command and run a job on a specific node
     """
     n = server.nodes.get(node)
-    if n == None:
+    if n is None:
         console.print(f"[bold red]Node {node} not found!")
         return
-    c = Prompt.ask(f"[green] Which command do you want to run?")
+    c = Prompt.ask("[green] Which command do you want to run?")
     console.print(f"Running command {c} on node [green]{node}[/green], please wait...")
     nl = "\n"
     console.print(f"{nl}{escape(n.run_script(c))}{nl}")
@@ -292,7 +291,6 @@ def job_checks(name: str):
             exit(0)
 
 
-@tui()
 @click.group(help="jcli - Jenkins job cli")
 @click.version_option(__version__)
 def main():
