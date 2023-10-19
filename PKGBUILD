@@ -1,7 +1,7 @@
 # Maintainer: brokenpip3 <brokenpip3[at]gmail[dot]com>
 pkgname=jcli
 _pkgname=jenkins-job-cli
-pkgver=0.3.4
+pkgver=0.3.8
 pkgrel=1
 pkgdesc='Small cli to list, run, and check jenkins jobs'
 arch=('any')
