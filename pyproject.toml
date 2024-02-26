@@ -15,15 +15,15 @@ jcli = "jcli.cli:main"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-api4jenkins = "^1.9"
+api4jenkins = ">=1.9,<3.0"
 rich = ">=12,<14"
 click = "^8.0.4"
 appdirs = "^1.4.4"
 PyYAML = "^6.0"
 
 [tool.poetry.dev-dependencies]
-mock = "^5.0.2"
-pytest = "^7.3.1"
+mock = "^5.1.0"
+pytest = "^8.0.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
